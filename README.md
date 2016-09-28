@@ -8,7 +8,7 @@ This is achieved using the following:
 - [cathulhu][1] - github client written in Rust.
 - [bottymcbottyface][2] - a collection of irc bot(s) written in Rust.
 - git - to pull a copy of the [team][3] repo which hosts the meeting minutes.
-- A shell script to parse the input from cathulhu and git.
+- A shell script to parse the input from cathulhu and git (pending tidy and shellcheck).
 - A crontab entry
 
 At the time of writing meetingbot is running on @booyaa's raspberry pi at home.
