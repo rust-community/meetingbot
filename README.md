@@ -38,9 +38,15 @@ for date arithmetic. MacOS/OSX won't work because they implement BSD's version.
 ```
 git clone https://github.com/rust-community/meetingbot.git
 cd meetingbot
+git clone https://github.com/rust-community/team.git
 cargo install cathulhu
 cargo install --example mouthpiece bottymcbottyface
 ```
+
+edit `doit.sh` updating the follow variables to match your environment:
+
+- `CATHULHU_GIT_REPO` - this should be a sub-directory in your meetingbot installation.
+- `CATHULHU_CARGO_BIN` - where cathulhu and mouthpiece were installed.
 
 ## crontab
 
