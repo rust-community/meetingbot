@@ -29,7 +29,8 @@ You'll need the minimum versions of these tools to run meetingbot.
 - cathulhu 0.1.1
 - mouthpiece (bottymcbottyface v0.1.2)
 
-n.b. rust and friends installed using rustup 0.6.3 (a0e2132 2016-08-28).
+n.b. rust and friends were installed using rustup 0.6.3 (a0e2132 2016-08-28).
+
 n.b. `date` must be the GNU version. The script is reliant on the `--date` flag
 for date arithmetic. MacOS/OSX won't work because they implement BSD's version.
 
