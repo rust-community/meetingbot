@@ -1,12 +1,6 @@
 #!/bin/bash +xv
-#TODO: check for cathulhu and git
-#TODO: check for team repo
-#TODO: check for gnu date
-#TODO: improve debugging
-
 CATHULHU_GIT_REPO=/path/to/repo/team
 CATHULHU_CARGO_BIN=/path/to/cargo/bin
-
 echo "DEBUG|cron's path: $PATH"
 
 git -C $CATHULHU_GIT_REPO fetch
@@ -18,29 +12,15 @@ DAY_NO=$(date +"%u")
 #TEST
 #DAY_NO=3 #testing
 #echo "TEST|Overriding DAY_NO to 3 was " $(date +"%u")
-
-if [ ${DAY_NO} -eq 3 ];
-then
-	OFFSET=7
-	NEXT_MEETING=$(date +"%Y-%m-%d")
-fi
-
-if [ ${DAY_NO} -eq 2 ];
-then
-	OFFSET=6
-	NEXT_MEETING=$(date --date="next wednesday" +"%Y-%m-%d")
-fi
-
-
-# if [ ! ${DAY_NO} -eq 3 -a ! ${DAY_NO} -eq 2 ];
 if [ ! ${DAY_NO} -eq 3 ] && [ ! ${DAY_NO} -eq 2 ];
 then
 	echo Not Tuesday or Wednesday
 	exit 1
 fi
 
-echo "DEBUG|offset: ${OFFSET} next meeting: ${NEXT_MEETING}"
-LAST_WEEK=$(date --date="${OFFSET} days ago" +"%Y-%m-%d")
+NEXT_MEETING=$(date --date="next wednesday" +"%Y-%m-%d")
+LAST_WEEK=$(date --date="last wednesday" +"%Y-%m-%d")
+echo "Last week: ${LAST_WEEK} Next week: ${NEXT_MEETING}"
 
 #TEST
 #echo "TEST|overriding $LAST_WEEK"
@@ -72,13 +52,13 @@ FILE_NAME=$(git -C $CATHULHU_GIT_REPO log --oneline --decorate --after="${LAST_W
 
 # Does the minutes match last week date stamp?
 RESULT=$(echo $FILE_NAME | grep $LAST_WEEK)
-echo "Last weeks minutes: $RESULT"
 if [ $? -eq 0 ];
 then
 	MINUTES="Last week's minutes https://github.com/rust-community/team/blob/master$FILE_NAME."
 else
 	MINUTES="No minutes found for last week."
 fi
+echo "Last weeks minutes: $RESULT"
 
 #TEST
 #echo "TEST|overriding $NEXT_MEETING"
@@ -87,7 +67,6 @@ fi
 ISSUE=$($CATHULHU_CARGO_BIN/cathulhu issues rust-community/team --list | grep -iE '(meeting|agenda)' | head -n 1)
 # Does the minutes match last week date stamp
 RESULT=$(echo $ISSUE | grep $NEXT_MEETING)
-echo "This weeks agenda: $RESULT"
 if [ $? -eq 0 ];
 then
 	echo "DEBUG|Found agenda!"
@@ -97,12 +76,11 @@ else
 	AGENDA="No agenda has been set!"
 fi
 
-
+echo "DEBUG|result: $RESULT"
 echo "DEBUG|issue: $ISSUE"
 echo "DEBUG|last week: $LAST_WEEK"
 echo "DEBUG|filename: $FILE_NAME"
 echo "DEBUG|agenda: $AGENDA"
-
 
 NICK=meetingbot
 SERVER=irc.mozilla.org
