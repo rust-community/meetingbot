@@ -86,8 +86,7 @@ echo "DEBUG|agenda: $AGENDA"
 NICK=meetingbot
 SERVER=irc.mozilla.org
 CHANNEL=\#rust-community
-#testing 
-CHANNEL=\#sekrit382
+#testing CHANNEL=\#sekrit382
 MESSAGE="$AGENDA The meeting is this Weds @ 4PM UTC. $MINUTES bippity beep!"
 echo "DEBUG|Sending ${MESSAGE}"
 
