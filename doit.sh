@@ -1,6 +1,7 @@
 #!/bin/bash +xv
 CATHULHU_GIT_REPO=/path/to/repo/team
 CATHULHU_CARGO_BIN=/path/to/cargo/bin
+
 echo "DEBUG|cron's path: $PATH"
 
 git -C $CATHULHU_GIT_REPO fetch
@@ -18,7 +19,7 @@ then
 	exit 1
 fi
 
-NEXT_MEETING=$(date --date="next wednesday" +"%Y-%m-%d")
+NEXT_MEETING=$(date --date="this wednesday" +"%Y-%m-%d")
 LAST_WEEK=$(date --date="last wednesday" +"%Y-%m-%d")
 echo "Last week: ${LAST_WEEK} Next week: ${NEXT_MEETING}"
 
@@ -56,7 +57,7 @@ if [ $? -eq 0 ];
 then
 	MINUTES="Last week's minutes https://github.com/rust-community/team/blob/master$FILE_NAME."
 else
-	MINUTES="No minutes found for last week."
+	MINUTES="No minutes found for last week. :("
 fi
 echo "Last weeks minutes: $RESULT"
 
@@ -73,7 +74,7 @@ then
 	AGENDA="This week's agenda: $(echo ${ISSUE} | cut -f3 -d'|')."
 else
 	echo "DEBUG|No agenda!"
-	AGENDA="No agenda has been set!"
+	AGENDA="No agenda has been set! :("
 fi
 
 echo "DEBUG|result: $RESULT"
@@ -85,8 +86,9 @@ echo "DEBUG|agenda: $AGENDA"
 NICK=meetingbot
 SERVER=irc.mozilla.org
 CHANNEL=\#rust-community
-#testing CHANNEL=\#sekrit382
-MESSAGE="$AGENDA The meeting is this Weds @ 4PM UTC. $MINUTES"
+#testing 
+CHANNEL=\#sekrit382
+MESSAGE="$AGENDA The meeting is this Weds @ 4PM UTC. $MINUTES bippity beep!"
 echo "DEBUG|Sending ${MESSAGE}"
 
 $CATHULHU_CARGO_BIN/mouthpiece -n $NICK -s $SERVER -c $CHANNEL -m "$MESSAGE"
