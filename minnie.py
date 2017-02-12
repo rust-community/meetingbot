@@ -20,7 +20,7 @@ def get_issues():
     logger = logging.getLogger(__name__)
 
     token = os.environ['CATHULHU_GH_PAT']
-    gh = Github(token)
+    gh = Github(token) # pylint: disable=invalid-name
     repo = gh.get_organization('rust-community').get_repo('team')
     issues = repo.get_issues(state="close")
     pattern = re.compile(r'^(\d{4}-\d{2}-\d{2}).*meeting', re.IGNORECASE)
@@ -80,8 +80,8 @@ def get_irclog_urls():
     Returns: list of urls
     """
     urls = []
-    issues = get_issues()
-    # issues = load_data("issues")
+    # issues = get_issues()
+    issues = load_data("issues")
 
     minutes = get_existing_minutes()
     pattern = re.compile(r'^(\d{4}-\d{2}-\d{2}).*meeting', re.IGNORECASE)
@@ -98,10 +98,16 @@ def get_irclog_urls():
 
     return urls
 
+    def download_logs():
+        """
+        Saves irc logs to the file system
+        """
+
+
 if __name__ == "__main__":
     # urls = get_irclog_urls()
     # save_data(urls, 'urls')
-    print(load_data("urls"))
+    print(load_data("urls")) # TODO: need to create a list with struct containing filename and url
     # issues = get_issues()
     # save_data(issues, 'issues')
     # print("saved issues locally")
