@@ -11,16 +11,17 @@ from pathlib import Path
 from simpledate import SimpleDate
 from github import Github
 
+
 def get_issues():
     """
-    Looks for meeting related issues
+    Looks for meeting related open issues
     Returns: list of GitHub issues
     """
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
     token = os.environ['CATHULHU_GH_PAT']
-    gh = Github(token) # pylint: disable=invalid-name
+    gh = Github(token)  # pylint: disable=invalid-name
     repo = gh.get_organization('rust-community').get_repo('team')
     issues = repo.get_issues(state="close")
     pattern = re.compile(r'^(\d{4}-\d{2}-\d{2}).*meeting', re.IGNORECASE)
@@ -29,10 +30,12 @@ def get_issues():
         issue_match = pattern.match(issue.title)
         if issue_match:
             meeting_date = issue_match.group(1)
-            logger.debug("#%d: %s => %s", issue.number, issue.title, meeting_date)
+            logger.debug("#%d: %s => %s", issue.number,
+                         issue.title, meeting_date)
             meetings.append(issue)
 
     return meetings
+
 
 def get_existing_minutes():
     """
@@ -42,10 +45,13 @@ def get_existing_minutes():
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
-    files = sorted(Path('/Users/booyaa/Desktop/team/meeting-minutes').glob('*.txt')) # FIXME hard coded
+    # FIXME hard coded
+    files = sorted(
+        Path('/Users/booyaa/Desktop/team/meeting-minutes').glob('*.txt'))
     minutes = [f.parts[-1] for f in files]
 
     return minutes
+
 
 def save_data(data, filename):
     """saves pickled dict of opening times to home dir
@@ -57,6 +63,7 @@ def save_data(data, filename):
     savedir = os.environ["HOME"] + '/.minnie/'
     with open(savedir + filename + '.pickle', 'wb') as f:
         pickle.dump(data, f)
+
 
 def load_data(filename):
     """
@@ -73,6 +80,7 @@ def load_data(filename):
 
     return data
 
+
 def get_irclog_urls():
     """
     Create a list of urls that can be used to down irc logs from logs.glob.uno
@@ -80,7 +88,7 @@ def get_irclog_urls():
     Returns: list of urls
     """
     urls = []
-    # issues = get_issues()
+    
     issues = load_data("issues")
 
     minutes = get_existing_minutes()
@@ -89,26 +97,39 @@ def get_irclog_urls():
         issue_match = pattern.match(issue.title)
         if issue_match:
             meeting_date = issue_match.group(1)
-            minute_file = meeting_date+'.txt'
+            print("meeting date: ", meeting_date)
+            minute_file = meeting_date + '.txt'
             if minute_file not in minutes:
                 # http://logs.glob.uno/?c=mozilla%23rust-community&s=25+Jan+2017&e=25+Jan+2017&t=text
                 glob_log_date = SimpleDate(meeting_date, format="%d+%b+%Y")
-                url = "http://logs.glob.uno/?c=mozilla%23rust-community&s={}&e={}&t=text".format(glob_log_date, glob_log_date)
+                url = "http://logs.glob.uno/?c=mozilla%23rust-community&s={}&e={}&t=text".format(
+                    glob_log_date, glob_log_date)
                 urls.append(url)
 
     return urls
 
-    def download_logs():
-        """
-        Saves irc logs to the file system
-        """
+
+def download_logs():
+    """
+    Saves irc logs to the file system
+    """
+    for url in load_data("urls"):
+        print(url)
 
 
 if __name__ == "__main__":
-    # urls = get_irclog_urls()
-    # save_data(urls, 'urls')
-    print(load_data("urls")) # TODO: need to create a list with struct containing filename and url
+    # 1 - get issues
     # issues = get_issues()
     # save_data(issues, 'issues')
     # print("saved issues locally")
     # print(load_data("issues"))
+    # for item in load_data("issues"):
+        # print(item)
+
+    # 2 - get urls
+    # urls = get_irclog_urls()
+    # save_data(urls, 'urls')
+    # print(load_data("urls")) 
+
+    # 3 - download logs
+    download_logs()
