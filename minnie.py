@@ -7,6 +7,7 @@ import logging
 import os
 import re
 import pickle
+import requests
 from pathlib import Path
 from simpledate import SimpleDate
 from github import Github
@@ -47,9 +48,8 @@ def get_existing_minutes():
 
     # FIXME hard coded
     files = sorted(
-        Path('/Users/booyaa/Desktop/team/meeting-minutes').glob('*.txt'))
+        Path('/Users/booyaa/dev/github/rust-community/team/meeting-minutes').glob('*.txt'))
     minutes = [f.parts[-1] for f in files]
-
     return minutes
 
 
@@ -87,8 +87,8 @@ def get_irclog_urls():
 
     Returns: list of urls
     """
-    urls = []
-    
+    urls = dict()
+
     issues = load_data("issues")
 
     minutes = get_existing_minutes()
@@ -97,14 +97,13 @@ def get_irclog_urls():
         issue_match = pattern.match(issue.title)
         if issue_match:
             meeting_date = issue_match.group(1)
-            print("meeting date: ", meeting_date)
             minute_file = meeting_date + '.txt'
             if minute_file not in minutes:
                 # http://logs.glob.uno/?c=mozilla%23rust-community&s=25+Jan+2017&e=25+Jan+2017&t=text
                 glob_log_date = SimpleDate(meeting_date, format="%d+%b+%Y")
                 url = "http://logs.glob.uno/?c=mozilla%23rust-community&s={}&e={}&t=text".format(
                     glob_log_date, glob_log_date)
-                urls.append(url)
+                urls[meeting_date] = url
 
     return urls
 
@@ -113,13 +112,29 @@ def download_logs():
     """
     Saves irc logs to the file system
     """
-    for url in load_data("urls"):
-        print(url)
+    urls = load_data("urls")
 
+    for issue in urls.keys():
+        url = urls[issue]
+        print("downloading... ", url)
+
+        r = requests.get(url)
+        minutes = r.text
+        if r.status_code == 200 and len(minutes):
+            # saving minutes
+            filename = issue+".txt"
+            base_dir = "/Users/booyaa/dev/github/rust-community/team/meeting-minutes" # FIXME: hard coded
+            save_to = os.path.join(base_dir, filename)
+            with open(save_to, 'w') as f:
+                f.write(minutes)
+            print("saved minutes as ", save_to)
+        else:
+            # failed to save report status_code and size of text
+            print("failed to save minute! status: ", r.status_code, " body length: ", len(minutes))
 
 if __name__ == "__main__":
     # 1 - get issues
-    # issues = get_issues()
+    issues = get_issues()
     # save_data(issues, 'issues')
     # print("saved issues locally")
     # print(load_data("issues"))
@@ -132,4 +147,4 @@ if __name__ == "__main__":
     # print(load_data("urls")) 
 
     # 3 - download logs
-    download_logs()
+    # download_logs()
