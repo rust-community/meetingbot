@@ -108,7 +108,7 @@ def get_irclog_urls():
     return urls
 
 
-def download_logs():
+def download_logs(dry_run=False):
     """
     Saves irc logs to the file system
     """
@@ -125,6 +125,9 @@ def download_logs():
             filename = issue+".txt"
             base_dir = "/Users/booyaa/dev/github/rust-community/team/meeting-minutes" # FIXME: hard coded
             save_to = os.path.join(base_dir, filename)
+            if dry_run:
+                print("dry run: minutes file: ", save_to)
+                continue
             with open(save_to, 'w') as f:
                 f.write(minutes)
             print("saved minutes as ", save_to)
@@ -135,16 +138,17 @@ def download_logs():
 if __name__ == "__main__":
     # 1 - get issues
     issues = get_issues()
-    # save_data(issues, 'issues')
-    # print("saved issues locally")
+    save_data(issues, 'issues')
+    print("saved issues locally")
     # print(load_data("issues"))
     # for item in load_data("issues"):
         # print(item)
 
     # 2 - get urls
-    # urls = get_irclog_urls()
-    # save_data(urls, 'urls')
-    # print(load_data("urls")) 
+    urls = get_irclog_urls()
+    save_data(urls, 'urls')
+    print(load_data("urls")) 
 
     # 3 - download logs
-    # download_logs()
+    # download_logs(dry_run=True)
+    download_logs()
