@@ -6,12 +6,14 @@ This will eventually become a class to identify if there's any work for
 meetingbot to do.
 """
 import os
-from datetime import datetime, timezone
-from dateutil import tz
+from datetime import datetime, timedelta, timezone
 
 from icalendar import Calendar
 
 import pytz
+from pytz import timezone as pytz
+import pytz
+
 import requests
 
 """
@@ -46,11 +48,34 @@ def main():
                 if until[0] < datetime.now(timezone.utc):
                     continue
             start_time = comp.get('DTSTART').dt
-            print("dtstart: {}\ndescription: {}".format(
-                start_time, comp.get('DESCRIPTION')))
+            print("Calendar entry time: {}\nOur local time     : {}".format(
+                start_time, get_our_time(start_time)))
 
-            print(rrule)
+            print("Raw RRULE:", rrule)
             print("--------------")
+
+
+def get_our_time(start_time):
+    """
+    Convert datetime with tzinfo to local time
+    Args:
+        start_time - datetime with tzinfo
+    Returns:
+        date time with our tzinfo
+    """
+    config = get_config()
+    our_timezone = pytz.timezone(config['timezone'])
+    # print('\tour timezone: {}'.format(our_timezone))
+
+    their_dt = start_time
+    our_dt = their_dt.astimezone(our_timezone)
+    # print('\ttheir time: {} our time: {}'.format(their_dt, our_dt))
+
+    return our_dt
+
+
+def get_config():
+    return {'timezone': 'Europe/London'}
 
 if __name__ == "__main__":
     main()
