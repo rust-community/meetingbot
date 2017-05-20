@@ -48,8 +48,21 @@ def main():
                 if until[0] < datetime.now(timezone.utc):
                     continue
             start_time = comp.get('DTSTART').dt
+            our_time = get_our_time(start_time)
             print("Calendar entry time: {}\nOur local time     : {}".format(
-                start_time, get_our_time(start_time)))
+                start_time, our_time))
+
+            # turn this into next meeting date computation
+            blighty=pytz.timezone('Europe/London')
+            print('timediff:',datetime.now(tz=blighty)-our_time)
+            print(our_time.timetuple().tm_mon)
+            if our_time < datetime.now(tz=blighty):
+                print("date in the past")
+            else:
+                print("okay")
+            
+            next_meeting = (our_time + timedelta(weeks=4)) + timedelta(days=7)
+            print("Next meeting will be: {}".format(next_meeting))
 
             print("Raw RRULE:", rrule)
             print("--------------")
