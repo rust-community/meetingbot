@@ -1,2 +1,6 @@
-team/*
-dontcommitmebro/*
+team/
+dontcommitmebro/
+__pycache__/
+.vscode/
+tags
+
