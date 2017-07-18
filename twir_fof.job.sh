@@ -5,4 +5,4 @@ URL="https://users.rust-lang.org/t/twir-friends-of-the-forest/7295"
 MESSAGE="Time to check the TWIR Friends of the Forest thread! ${URL} ${endings[${rando}]}"
 echo "DEBUG|Sending ${MESSAGE}"
 
-/home/booyaa/meetingbot/doit.sh ${MESSAGE}
+/home/booyaa/meetingbot/say_it.sh ${MESSAGE}

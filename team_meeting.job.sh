@@ -20,4 +20,4 @@ rando=$(( ( RANDOM % 5 )  + 1 ))
 MESSAGE="$AGENDA The meeting is on Weds @ 4PM and 11PM UTC. ${endings[${rando}]}"
 echo "DEBUG|Sending ${MESSAGE}"
 
-/home/booyaa/meetingbot/doit.sh ${MESSAGE}
+/home/booyaa/meetingbot/say_it.sh ${MESSAGE}
