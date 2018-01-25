@@ -2,7 +2,8 @@ CATHULHU_GH_PAT=YOUR_GITHUB_PAT
 HASHPIPE_BIN=/path/to/hashpipe
 CATHULHU_CARGO_BIN=/path/to/cathulhu
 # run fotf reminder 4pm UTC mondays
-0 16 * * 0 /path/to/meetingbot/twir_fof.job.sh
+0 16 * * 1 /home/booyaa/meetingbot/twir_fof.job.sh
 # run team meeting herald 1hr before 4pm UTC tuesday and wedesday
 # run team meeting herald 1hr before 10pm UTC tuesday and wedesday
-0 16,22 * * 2,3 /path/to/meetingbot/team_meeting.job.sh
+0 16 * * 2 /home/booyaa/meetingbot/team_meeting.job.sh "Community meeting tommorrow at 5pm!"
+0 16,22 * * 3 /home/booyaa/meetingbot/team_meeting.job.sh "Community meeting in 1 hours time!"
