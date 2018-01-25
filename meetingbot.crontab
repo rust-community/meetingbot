@@ -1,9 +1,17 @@
 CATHULHU_GH_PAT=YOUR_GITHUB_PAT
 HASHPIPE_BIN=/path/to/hashpipe
 CATHULHU_CARGO_BIN=/path/to/cathulhu
+MEETINGBOT=/home/booyaa/meetingbot
+MSG_TEAMS="Sub team meeting in 1 hours time!"
+MSG_ALL="Community meeting in 1 hours time!"
+# source: https://serverfault.com/q/633264/3101
+# get the week number (%W - week number of year 00..53)
+# %2 is modulo by 2
+# returns 0 or 1
+EVEN_WEEK=$((10#$(date +\%W)%2))
 # run fotf reminder 4pm UTC mondays
-0 16 * * 1 /home/booyaa/meetingbot/twir_fof.job.sh
-# run team meeting herald 1hr before 4pm UTC tuesday and wedesday
-# run team meeting herald 1hr before 10pm UTC tuesday and wedesday
-0 16 * * 2 /home/booyaa/meetingbot/team_meeting.job.sh "Community meeting tommorrow at 5pm!"
-0 16,22 * * 3 /home/booyaa/meetingbot/team_meeting.job.sh "Community meeting in 1 hours time!"
+0 16    * * 1 $MEETINGBOT/twir_fof.job.sh
+# run sub teams meeting herald 1hr before 4pm UTC (on week numbers not divisble by 2)
+0 16,22 * * 3 test $EVEN_WEEK -eq 1 && $MEETINGBOT/team_meeting.job.sh $MSG_TEAM
+# run general herald 1hr before 4pm UTC (on week numbers divisble by 2)
+0 16,22 * * 3 test $EVEN_WEEK -eq 0 && MEETINGBOT/team_meeting.job.sh $MSG_ALL
