@@ -15,9 +15,10 @@ else
 	AGENDA="No agenda has been set! :("
 fi
 
-endings=("bippity beep!" "boopity boop!" "*happy bleeping noises*" "blort!" "beep boop!")
-rando=$(( ( RANDOM % 5 )  + 1 ))
-MESSAGE="$AGENDA The meeting is on Weds @ 4PM and 11PM UTC. ${endings[${rando}]}"
+endings=("*hums the Final Countdown*" "bippity beep!" "boopity boop!" "*happy bleeping noises*" "blort!" "beep boop!")
+roni=${#endings[@]}
+rando=$(( ( RANDOM % ${roni} ) ))
+MESSAGE="$1 ${endings[${rando}]}"
 echo "DEBUG|Sending ${MESSAGE}"
 
 /home/booyaa/meetingbot/say_it.sh ${MESSAGE}
