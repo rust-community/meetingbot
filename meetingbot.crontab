@@ -1,6 +1,4 @@
-CATHULHU_GH_PAT=6afb9c532c395c8645db5f079865a13afb70bd43
 HASHPIPE_BIN=/home/booyaa/.cargo/bin/hashpipe
-CATHULHU_CARGO_BIN=/home/booyaa/.cargo/bin/cathulhu
 MEETINGBOT=/home/booyaa/meetingbot
 MSG_TEAMS="Sub teams meeting in an hours time!"
 MSG_ALL="Community meeting in an hours time!"
