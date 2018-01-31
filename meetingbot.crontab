@@ -1,6 +1,6 @@
-CATHULHU_GH_PAT=YOUR_GITHUB_PAT
-HASHPIPE_BIN=/path/to/hashpipe
-CATHULHU_CARGO_BIN=/path/to/cathulhu
+CATHULHU_GH_PAT=6afb9c532c395c8645db5f079865a13afb70bd43
+HASHPIPE_BIN=/home/booyaa/.cargo/bin/hashpipe
+CATHULHU_CARGO_BIN=/home/booyaa/.cargo/bin/cathulhu
 MEETINGBOT=/home/booyaa/meetingbot
 MSG_TEAMS="Sub teams meeting in an hours time!"
 MSG_ALL="Community meeting in an hours time!"
@@ -13,9 +13,6 @@ MSG_ALL="Community meeting in an hours time!"
 # run fotf reminder 4pm UTC mondays
 0 16    * * 1 $MEETINGBOT/twir_fof.job.sh
 
-# alternatng weeks for team meetings
-# run sub teams meeting herald 1hr before 4pm UTC  (odd weeks)
-0 16    * * 3 [ $(( `date +\%W` \%2 )) -eq 1 ] && $MEETINGBOT/team_meeting.job.sh $MSG_TEAM
+# alternatng weeks for community meetings
 # run general herald 1hr before 4pm and 10pm UTC  (even weeks)
 0 16,22 * * 3 [ $(( `date +\%W` \%2 )) -eq 0 ] && $MEETINGBOT/team_meeting.job.sh $MSG_ALL
-
