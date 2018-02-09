@@ -1,7 +1,7 @@
-HASHPIPE_BIN=/home/booyaa/.cargo/bin/hashpipe
-MEETINGBOT=/home/booyaa/meetingbot
-MSG_TEAMS="Sub teams meeting in an hours time!"
 MSG_ALL="Community meeting in an hours time!"
+MSG_CONTENT='Content meeting in an hours time (#rust-content)! booyaa, manishearth, badboy, skade: ping!'
+MSG_EVENTS='Events meeting in an hours time (telegram)! booyaa, manishearth, badboy, skade: ping!'
+MSG_SWITCHBOARD='Switchboard meeting in an hours time! booyaa, manishearth, badboy: ping!'
 # alternating week logic
 # get week no 00..53
 # modulo value by 2
@@ -11,6 +11,13 @@ MSG_ALL="Community meeting in an hours time!"
 # run fotf reminder 4pm UTC mondays
 0 16    * * 1 $MEETINGBOT/twir_fof.job.sh
 
-# alternatng weeks for community meetings
-# run general herald 1hr before 4pm and 10pm UTC  (even weeks)
-0 16,22 * * 3 [ $(( `date +\%W` \%2 )) -eq 0 ] && $MEETINGBOT/team_meeting.job.sh $MSG_ALL
+# community team meeting reminder (5pm UTC wed)
+0 16 * * 3 [ $(( `date +\%W` \%2 )) -eq 0 ] && $MEETINGBOT/team_meeting.job.sh "$MSG_ALL"
+
+# alternating weeks subteam meetings reminders
+# content (5:30pm UTC tue)
+30 16 * * 2 [ $(( `date +\%W` \%2 )) -eq 1 ] && $MEETINGBOT/team_meeting.job.sh "$MSG_CONTENT"
+# events (5:00pm UTC wed)
+0  16 * * 3 [ $(( `date +\%W` \%2 )) -eq 1 ] && $MEETINGBOT/team_meeting.job.sh "$MSG_EVENTS"
+# switchboard (5:00pm UTC thu)
+0  16 * * 4 [ $(( `date +\%W` \%2 )) -eq 1 ] && $MEETINGBOT/team_meeting.job.sh "$MSG_SWITCHBOARD"
