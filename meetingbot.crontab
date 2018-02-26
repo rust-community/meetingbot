@@ -1,7 +1,10 @@
+## MEETINGBOT BEGIN ##
 MSG_ALL="Community meeting in an hours time!"
-MSG_CONTENT='Content meeting in an hours time (#rust-content)! booyaa, manishearth, badboy, skade: ping!'
+MSG_CONTENT='Content meeting in an hours time (we moved back to #rust-community)! booyaa, manishearth, badboy, skade: ping!'
 MSG_EVENTS='Events meeting in an hours time (telegram)! booyaa, manishearth, badboy, skade: ping!'
 MSG_SWITCHBOARD='Switchboard meeting in an hours time! booyaa, manishearth, badboy: ping!'
+MSG_SUBTEAM='Reminder this week is sub team meetings!'
+MSG_ALL_REMINDER='Reminder tomorrow is the community meeting!'
 # alternating week logic
 # get week no 00..53
 # modulo value by 2
@@ -12,12 +15,15 @@ MSG_SWITCHBOARD='Switchboard meeting in an hours time! booyaa, manishearth, badb
 0 16    * * 1 $MEETINGBOT/twir_fof.job.sh
 
 # community team meeting reminder (5pm UTC wed)
-0 16 * * 3 [ $(( `date +\%W` \%2 )) -eq 0 ] && $MEETINGBOT/team_meeting.job.sh "$MSG_ALL"
+0  16 * * 3 bash $MEETINGBOT/is_even_week.sh && $MEETINGBOT/team_meeting.job.sh "$MSG_ALL"
+0  16 * * 1 bash $MEETINGBOT/is_even_week.sh && $MEETINGBOT/team_meeting.job.sh "$MSG_ALL_REMINDER"
 
 # alternating weeks subteam meetings reminders
+0  16 * * 1 bash $MEETINGBOT/is_odd_week.sh && $MEETINGBOT/team_meeting.job.sh "$MSG_SUBTEAM"
 # content (5:30pm UTC tue)
-30 16 * * 2 [ $(( `date +\%W` \%2 )) -eq 1 ] && $MEETINGBOT/team_meeting.job.sh "$MSG_CONTENT"
+30 16 * * 2 bash $MEETINGBOT/is_odd_week.sh && $MEETINGBOT/team_meeting.job.sh "$MSG_CONTENT"
 # events (5:00pm UTC wed)
-0  16 * * 3 [ $(( `date +\%W` \%2 )) -eq 1 ] && $MEETINGBOT/team_meeting.job.sh "$MSG_EVENTS"
+0  16 * * 3 bash $MEETINGBOT/is_odd_week.sh && $MEETINGBOT/team_meeting.job.sh "$MSG_EVENTS"
 # switchboard (5:00pm UTC thu)
-0  16 * * 4 [ $(( `date +\%W` \%2 )) -eq 1 ] && $MEETINGBOT/team_meeting.job.sh "$MSG_SWITCHBOARD"
+0  16 * * 4 bash $MEETINGBOT/is_odd_week.sh && $MEETINGBOT/team_meeting.job.sh "$MSG_SWITCHBOARD"
+# MEETINGBOT END ##
