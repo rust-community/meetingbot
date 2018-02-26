@@ -9,7 +9,6 @@ killall $HASHPIPE_BIN # seem to hang around last time
 
 BOT_NAME="meetingbot"
 BOT_SERVER="irc.mozilla.org"
-#BOT_CHANNEL='#sekrit31337'
 BOT_CHANNEL='#rust-community'
 BOT_MESSAGE=$@
 
